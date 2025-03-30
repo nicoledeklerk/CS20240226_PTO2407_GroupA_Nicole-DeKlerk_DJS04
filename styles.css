@@ -436,3 +436,7 @@ option {
 .overlay[open] ~ .backdrop {
   display: block;
 }
+
+.list__button {
+  display: none;
+}

@@ -66,6 +66,7 @@ function renderBooks(bookList) {
 // Initializes the book list //
 function initBookList() {
     renderBooks(state.matches.slice(0, BOOKS_PER_PAGE));
+    updateShowMoreButton(); // Check button visibility after initial load
 }
 
 // Handles form submission and filtering //
@@ -87,6 +88,7 @@ function handleSearch(event) {
     renderBooks(state.matches.slice(0, BOOKS_PER_PAGE));
 
     domEl.listMessage.classList.toggle('list__message_show', state.matches.length < 1);
+    updateShowMoreButton(); // Update the button visibility after filtering
 }
 
 // Loads more books on button click //
@@ -95,6 +97,8 @@ function loadMoreBooks() {
     const end = start + BOOKS_PER_PAGE;
     renderBooks(state.matches.slice(start, end));
     state.page += 1;
+
+    updateShowMoreButton(); // Update the "Show More" button visibility
 }
 
 // Opens book details //
@@ -111,6 +115,11 @@ function showBookDetails(event) {
         domEl.listSubtitle.innerText = `${authors[book.author]} (${new Date(book.published).getFullYear()})`;
         domEl.listDescription.innerText = book.description;
     }
+}
+
+// Updates the "Show More" button visibility
+function updateShowMoreButton() {
+    domEl.listButton.style.display = state.matches.length > state.page * BOOKS_PER_PAGE ? 'block' : 'none';
 }
 
 // Event Listeners //
