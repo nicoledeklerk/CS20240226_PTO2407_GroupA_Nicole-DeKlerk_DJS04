@@ -1,7 +1,18 @@
 import { books, authors, genres, BOOKS_PER_PAGE } from './data.js'
+import { domEl } from './domElements.js'
 
 let page = 1;
 let matches = books
+
+function setTheme(isNight) {
+    document.documentElement.style.setProperty('--color-dark', isNight ? '255, 255, 255' : '10, 10, 20');
+    document.documentElement.style.setProperty('--color-light', isNight ? '10, 10, 20' : '255, 255, 255');
+}
+
+// Check and apply system theme preference
+const prefersDark = window.matchMedia?.('(prefers-color-scheme: dark)').matches;
+domEl.settingsTheme.value = prefersDark ? 'night' : 'day';
+setTheme(prefersDark);
 
 const starting = document.createDocumentFragment()
 
@@ -25,7 +36,7 @@ for (const { author, id, image, title } of matches.slice(0, BOOKS_PER_PAGE)) {
     starting.appendChild(element)
 }
 
-document.querySelector('[data-list-items]').appendChild(starting)
+domEl.listItems.appendChild(starting)
 
 const genreHtml = document.createDocumentFragment()
 const firstGenreElement = document.createElement('option')
@@ -40,7 +51,7 @@ for (const [id, name] of Object.entries(genres)) {
     genreHtml.appendChild(element)
 }
 
-document.querySelector('[data-search-genres]').appendChild(genreHtml)
+domEl.searchGenres.appendChild(genreHtml)
 
 const authorsHtml = document.createDocumentFragment()
 const firstAuthorElement = document.createElement('option')
@@ -55,64 +66,44 @@ for (const [id, name] of Object.entries(authors)) {
     authorsHtml.appendChild(element)
 }
 
-document.querySelector('[data-search-authors]').appendChild(authorsHtml)
+domEl.searchAuthors.appendChild(authorsHtml)
 
-if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-    document.querySelector('[data-settings-theme]').value = 'night'
-    document.documentElement.style.setProperty('--color-dark', '255, 255, 255');
-    document.documentElement.style.setProperty('--color-light', '10, 10, 20');
-} else {
-    document.querySelector('[data-settings-theme]').value = 'day'
-    document.documentElement.style.setProperty('--color-dark', '10, 10, 20');
-    document.documentElement.style.setProperty('--color-light', '255, 255, 255');
-}
+domEl.listButton.disabled = (matches.length - (page * BOOKS_PER_PAGE)) > 0
 
-document.querySelector('[data-list-button]').innerText = `Show more (${books.length - BOOKS_PER_PAGE})`
-document.querySelector('[data-list-button]').disabled = (matches.length - (page * BOOKS_PER_PAGE)) > 0
-
-document.querySelector('[data-list-button]').innerHTML = `
+domEl.listButton.innerHTML = `
     <span>Show more</span>
     <span class="list__remaining"> (${(matches.length - (page * BOOKS_PER_PAGE)) > 0 ? (matches.length - (page * BOOKS_PER_PAGE)) : 0})</span>
 `
 
-document.querySelector('[data-search-cancel]').addEventListener('click', () => {
-    document.querySelector('[data-search-overlay]').open = false
+domEl.searchCancel.addEventListener('click', () => {
+    domEl.searchOverlay.open = false
 })
 
-document.querySelector('[data-settings-cancel]').addEventListener('click', () => {
-    document.querySelector('[data-settings-overlay]').open = false
+domEl.settingsCancel.addEventListener('click', () => {
+    domEl.settingsOverlay.open = false
 })
 
-document.querySelector('[data-header-search]').addEventListener('click', () => {
-    document.querySelector('[data-search-overlay]').open = true 
-    document.querySelector('[data-search-title]').focus()
+domEl.headerSearch.addEventListener('click', () => {
+    domEl.searchOverlay.open = true 
+    domEl.searchTitle.focus()
 })
 
-document.querySelector('[data-header-settings]').addEventListener('click', () => {
-    document.querySelector('[data-settings-overlay]').open = true 
+domEl.headerSettings.addEventListener('click', () => {
+    domEl.settingsOverlay.open = true 
 })
 
-document.querySelector('[data-list-close]').addEventListener('click', () => {
-    document.querySelector('[data-list-active]').open = false
+domEl.listClose.addEventListener('click', () => {
+    domEl.listActive.open = false
 })
 
-document.querySelector('[data-settings-form]').addEventListener('submit', (event) => {
-    event.preventDefault()
-    const formData = new FormData(event.target)
-    const { theme } = Object.fromEntries(formData)
-
-    if (theme === 'night') {
-        document.documentElement.style.setProperty('--color-dark', '255, 255, 255');
-        document.documentElement.style.setProperty('--color-light', '10, 10, 20');
-    } else {
-        document.documentElement.style.setProperty('--color-dark', '10, 10, 20');
-        document.documentElement.style.setProperty('--color-light', '255, 255, 255');
-    }
-    
-    document.querySelector('[data-settings-overlay]').open = false
+// Event listener for theme change
+domEl.settingsForm.addEventListener('submit', (event) => {
+    event.preventDefault();
+    setTheme(new FormData(event.target).get('theme') === 'night');
+    domEl.settingsOverlay.open = false;
 })
 
-document.querySelector('[data-search-form]').addEventListener('submit', (event) => {
+domEl.searchForm.addEventListener('submit', (event) => {
     event.preventDefault()
     const formData = new FormData(event.target)
     const filters = Object.fromEntries(formData)
@@ -139,12 +130,12 @@ document.querySelector('[data-search-form]').addEventListener('submit', (event) 
     matches = result
 
     if (result.length < 1) {
-        document.querySelector('[data-list-message]').classList.add('list__message_show')
+        domEl.listMessage.classList.add('list__message_show')
     } else {
-        document.querySelector('[data-list-message]').classList.remove('list__message_show')
+        domEl.listMessage.classList.remove('list__message_show')
     }
 
-    document.querySelector('[data-list-items]').innerHTML = ''
+    domEl.listItems.innerHTML = ''
     const newItems = document.createDocumentFragment()
 
     for (const { author, id, image, title } of result.slice(0, BOOKS_PER_PAGE)) {
@@ -167,19 +158,19 @@ document.querySelector('[data-search-form]').addEventListener('submit', (event) 
         newItems.appendChild(element)
     }
 
-    document.querySelector('[data-list-items]').appendChild(newItems)
-    document.querySelector('[data-list-button]').disabled = (matches.length - (page * BOOKS_PER_PAGE)) < 1
+    domEl.listItems.appendChild(newItems)
+    domEl.listButton.disabled = (matches.length - (page * BOOKS_PER_PAGE)) < 1
 
-    document.querySelector('[data-list-button]').innerHTML = `
+    domEl.listButton.innerHTML = `
         <span>Show more</span>
         <span class="list__remaining"> (${(matches.length - (page * BOOKS_PER_PAGE)) > 0 ? (matches.length - (page * BOOKS_PER_PAGE)) : 0})</span>
     `
 
     window.scrollTo({top: 0, behavior: 'smooth'});
-    document.querySelector('[data-search-overlay]').open = false
+    domEl.searchOverlay.open = false
 })
 
-document.querySelector('[data-list-button]').addEventListener('click', () => {
+domEl.listButton.addEventListener('click', () => {
     const fragment = document.createDocumentFragment()
 
     for (const { author, id, image, title } of matches.slice(page * BOOKS_PER_PAGE, (page + 1) * BOOKS_PER_PAGE)) {
@@ -202,11 +193,11 @@ document.querySelector('[data-list-button]').addEventListener('click', () => {
         fragment.appendChild(element)
     }
 
-    document.querySelector('[data-list-items]').appendChild(fragment)
+    domEl.listItems.appendChild(fragment)
     page += 1
 })
 
-document.querySelector('[data-list-items]').addEventListener('click', (event) => {
+domEl.listItems.addEventListener('click', (event) => {
     const pathArray = Array.from(event.path || event.composedPath())
     let active = null
 
@@ -226,11 +217,11 @@ document.querySelector('[data-list-items]').addEventListener('click', (event) =>
     }
     
     if (active) {
-        document.querySelector('[data-list-active]').open = true
-        document.querySelector('[data-list-blur]').src = active.image
-        document.querySelector('[data-list-image]').src = active.image
-        document.querySelector('[data-list-title]').innerText = active.title
-        document.querySelector('[data-list-subtitle]').innerText = `${authors[active.author]} (${new Date(active.published).getFullYear()})`
-        document.querySelector('[data-list-description]').innerText = active.description
+        domEl.listActive.open = true
+        domEl.listBlur.src = active.image
+        domEl.listImage.src = active.image
+        domEl.listTitle.innerText = active.title
+        domEl.listSubtitle.innerText = `${authors[active.author]} (${new Date(active.published).getFullYear()})`
+        domEl.listDescription.innerText = active.description
     }
 })
