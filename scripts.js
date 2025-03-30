@@ -1,8 +1,10 @@
 import { books, authors, genres, BOOKS_PER_PAGE } from './data.js'
 import { domEl } from './domElements.js'
+import { addEventListeners} from './utils.js'
 
 let page = 1;
 let matches = books
+console.log(books);
 
 function setTheme(isNight) {
     document.documentElement.style.setProperty('--color-dark', isNight ? '255, 255, 255' : '10, 10, 20');
@@ -68,6 +70,7 @@ for (const [id, name] of Object.entries(authors)) {
 
 domEl.searchAuthors.appendChild(authorsHtml)
 
+domEl.listButton.innerText = `Show more (${books.length - BOOKS_PER_PAGE})`
 domEl.listButton.disabled = (matches.length - (page * BOOKS_PER_PAGE)) > 0
 
 domEl.listButton.innerHTML = `
@@ -225,3 +228,5 @@ domEl.listItems.addEventListener('click', (event) => {
         domEl.listDescription.innerText = active.description
     }
 })
+
+addEventListeners();
