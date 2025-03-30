@@ -51,14 +51,14 @@ export function addEventListeners(domEl, books, authors, BOOKS_PER_PAGE) {
             }
         }
 
-        // Handle the result here...
+    
     });
 
     domEl.listButton.addEventListener('click', () => {
-        // Handle show more button click...
+        
     });
 
     domEl.listItems.addEventListener('click', (event) => {
-        // Handle list item click...
+       
     });
 }
