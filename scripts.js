@@ -1,5 +1,6 @@
 import { books, authors, genres, BOOKS_PER_PAGE } from './data.js';
 import { domEl } from './domElements.js';
+import './book-preview.js';
 
 const state = {
     page: 1,
@@ -39,26 +40,18 @@ function populateDropdown(element, items, defaultText) {
     element.appendChild(fragment);
 }
 
-// Creates a book preview button //
-function createBookPreview({ author, id, image, title }) {
-    const element = document.createElement('button');
-    element.classList.add('preview');
-    element.setAttribute('data-preview', id);
-    element.innerHTML = `
-        <img class="preview__image" src="${image}" />
-        <div class="preview__info">
-            <h3 class="preview__title">${title}</h3>
-            <div class="preview__author">${authors[author]}</div>
-        </div>
-    `;
-    return element;
-}
 
 // Renders book previews //
 function renderBooks(bookList) {
     const fragment = document.createDocumentFragment();
+
     for (const book of bookList) {
-        fragment.appendChild(createBookPreview(book));
+        const preview = document.createElement('book-preview');
+        preview.setAttribute('id', book.id);
+        preview.setAttribute('title', book.title);
+        preview.setAttribute('author', authors[book.author]);
+        preview.setAttribute('image', book.image);
+        fragment.appendChild(preview);
     }
     domEl.listItems.appendChild(fragment);
 }
