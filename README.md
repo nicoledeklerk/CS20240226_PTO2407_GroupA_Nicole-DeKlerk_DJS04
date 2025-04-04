@@ -1,27 +1,59 @@
-# DJS03 Project Brief: Book Connect - Abstractions
+# DJS04 Project Brief: Book Connect - Web Components
 
  #### Preesentation Link
  https://www.loom.com/share/afa5f59cf52f4d189d0320ecd483b159?sid=0a99c1d3-f011-426c-8a93-ad582c974e61
 
 #### Written Report 
 
-Our assignment for DJS03 is to analyse and refactor the JavaScript and HTML Started code provided, and apply abstraction to hide complexity. 
+DJS04 Project Brief: Book Connect - Web Components
+ 
 
-The very first thing that I noticed when looking at the starter code is that there was much repetition of code for creating similar elements and the code was unorganized and difficult to read.  Therefore I will be walking  you through the rationale behind the refactoring decisions in my JavaScript code.
+Building upon your "Book Connect" project in DJS03, you will now dive into Web Components. This challenge will refine your skills in creating reusable, encapsulated, and interactive elements.
 
-I centralized all DOM elements in an external file to keep the script clean and separate UI references from logic. A **state object** now tracks pagination and filtered books, ensuring predictable updates.
+NOTE Here you are to continue where you left off in DJS03. This means you must build on your abstractions and work on transforming the Book Preview functionality into a web component
 
-UI logic was modularized into **reusable functions**:
 
-- `setTheme` manages themes.
-- `createOption` & `populateDropdown` handle dropdowns efficiently.
-- `createBookPreview` and `renderBooks` manage book display, avoiding redundancy.
+Objective
+ 
 
-Filtering and pagination were streamlined:
+Transform the book preview functionality of the "Book Connect" application into a fully operational Web Component. Additionally, evaluate and potentially convert other parts of the application into Web Components to enhance modularity and reusability.
 
-- `handleSearch` applies filters and updates the list.
-- `loadMoreBooks` handles pagination.
+Goals
+ 
 
-To improve readability, **all event listeners** were grouped in `initEventListeners`. Finally, `init` serves as the **main entry point**, setting up themes, dropdowns, and event listeners.
+Convert Book Preview to Web Component: The main focus is to encapsulate the book preview feature into a Web Component, making it reusable and independent.
+Assess Other Components: Identify other elements within the "Book Connect" app that could benefit from being converted into Web Components.
+Maintain Functionality: Ensure that the application retains all its current functionalities after refactoring.
+Tasks
+ 
 
-This structure ensures **modularity, reusability, and maintainability**, simplifying future updates.
+Understand the Existing Codebase: Familiarise yourself with the current structure and functionality of the "Book Connect" project, focusing on the book preview feature.
+Create a Web Component for Book Preview:
+Encapsulate the book preview into a Web Component.
+Ensure that the component is self-contained, with its own HTML, CSS, and JavaScript.
+Test the component to ensure it works seamlessly within the app.
+Identify and Convert Other Components:
+Analyse the application to identify other potential components for conversion.
+Prioritise components based on their reusability and importance to the app.
+Convert the chosen elements into Web Components.
+Testing and Integration:
+Rigorously test the new components individually and within the context of the application.
+Pay special attention to interactions between components and the overall user experience.
+Documentation:
+Document the process of creating the Web Components.
+Include any challenges faced and how they were overcome.
+Provide a clear guide on how the components should be used within the app.
+Discussion and Reflection
+ 
+
+Prepare to discuss your experience with your coach, focusing on:
+
+Challenges encountered while converting the book preview and other elements into Web Components.
+The rationale behind selecting certain elements for conversion into Web Components.
+Insights gained about the advantages and limitations of using Web Components in web development.
+ 
+
+Submission Guidelines
+ 
+
+Submit your updated "Book Connect" codebase, including all the newly created Web Components. Ensure your code is well-commented and adheres to best practices for Web Component development. Include a detailed report covering your process, challenges, and reflections on working with Web Components.
