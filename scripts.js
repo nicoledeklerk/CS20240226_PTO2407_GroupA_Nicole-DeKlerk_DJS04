@@ -112,7 +112,13 @@ function showBookDetails(event) {
 
 // Updates the "Show More" button visibility
 function updateShowMoreButton() {
-    domEl.listButton.style.display = state.matches.length > state.page * BOOKS_PER_PAGE ? 'block' : 'none';
+    const hasMoreBooks = state.matches.length > state.page * BOOKS_PER_PAGE;
+
+    domEl.listButton.style.display = hasMoreBooks ? 'block' : 'none';
+
+    if (hasMoreBooks) {
+        domEl.listButton.textContent = 'Show more';
+    }
 }
 
 // Event Listeners //
