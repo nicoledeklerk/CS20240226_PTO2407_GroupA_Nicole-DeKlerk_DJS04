@@ -1,6 +1,8 @@
 import { books, authors, genres, BOOKS_PER_PAGE } from './data.js';
 import { domEl } from './domElements.js';
+import './classes.js';
 import './book-preview.js';
+
 
 const state = {
     page: 1,
@@ -64,10 +66,9 @@ function initBookList() {
 
 // Handles form submission and filtering //
 function handleSearch(event) {
-    event.preventDefault();
-    const formData = new FormData(event.target);
-    const filters = Object.fromEntries(formData);
+    const filters = event.detail;  // { title, genre, author }
 
+    // Apply filtering logic
     state.matches = books.filter(book => {
         const genreMatch = filters.genre === 'any' || book.genres.includes(filters.genre);
         const titleMatch = filters.title.trim() === '' || book.title.toLowerCase().includes(filters.title.toLowerCase());
@@ -76,10 +77,12 @@ function handleSearch(event) {
         return genreMatch && titleMatch && authorMatch;
     });
 
+    // Reset page and render the filtered books
     state.page = 1;
     domEl.listItems.innerHTML = '';
     renderBooks(state.matches.slice(0, BOOKS_PER_PAGE));
 
+    // Handle the "no results" message and update the "Show More" button visibility
     domEl.listMessage.classList.toggle('list__message_show', state.matches.length < 1);
     updateShowMoreButton(); // Update the button visibility after filtering
 }
@@ -123,13 +126,15 @@ function updateShowMoreButton() {
 
 // Event Listeners //
 function initEventListeners() {
+    const searchForm = document.querySelector('search-form');  // Querying directly in main.js
+
     domEl.settingsForm.addEventListener('submit', (event) => {
         event.preventDefault();
         setTheme(new FormData(event.target).get('theme') === 'night');
         domEl.settingsOverlay.open = false;
     });
 
-    domEl.searchForm.addEventListener('submit', handleSearch);
+    searchForm.addEventListener('search-submit', handleSearch);
     domEl.listButton.addEventListener('click', loadMoreBooks);
     domEl.listItems.addEventListener('click', showBookDetails);
     domEl.searchCancel.addEventListener('click', () => domEl.searchOverlay.open = false);
@@ -143,8 +148,10 @@ function initEventListeners() {
 function init() {
     initTheme();
     initBookList();
-    populateDropdown(domEl.searchGenres, genres, 'All Genres');
-    populateDropdown(domEl.searchAuthors, authors, 'All Authors');
+
+    const searchForm = document.querySelector('search-form');  // Querying directly in main.js
+    searchForm.setGenres(genres);
+    searchForm.setAuthors(authors);
     initEventListeners();
 }
 

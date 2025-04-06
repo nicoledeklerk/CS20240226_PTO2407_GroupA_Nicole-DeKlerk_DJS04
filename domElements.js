@@ -10,7 +10,6 @@ export const domEl = {
     headerSettings: document.querySelector('[data-header-settings]'),
     listClose: document.querySelector('[data-list-close]'),
     settingsForm: document.querySelector('[data-settings-form]'),
-    searchForm: document.querySelector('[data-search-form]'),
     searchOverlay: document.querySelector('[data-search-overlay]'),
     settingsOverlay: document.querySelector('[data-settings-overlay]'),
     listActive: document.querySelector('[data-list-active]'),
